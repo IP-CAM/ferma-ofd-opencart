@@ -1,0 +1,21 @@
+<?php
+$_['doc_title'] = 'Ferma OFD.ru';
+$_['heading_title'] = 'Ferma OFD.ru';
+$_['entry_nds_vat0'] = "Без НДС";
+$_['entry_nds_vat10'] = "10%";
+$_['entry_nds_vat18'] = "18%";
+$_['text_success_upd'] = "Статусы чеков успешно обновлены";
+$_['text_warning_upd'] = "При обновлении статусов произошли ошибки";
+$_['text_req_settings'] = "Для корректной работы заполните необходимы настройки";
+$_['text_error_ofd'] = "ОШИБКА ОФД: ";
+$_['text_ofd'] = "ОФД: ";
+$_['text_error_ofd_mail'] = "ОШИБКА ОФД";
+$_['text_some_error_ofd_mail'] = "some error";
+$_['text_type_return'] = "возврата";
+$_['text_type_income'] = "прихода";
+$_['text_type_undefined'] = "кукуя";
+$_['text_already_exists'] = "Чек %s для заказа %s уже оформлен.";
+$_['text_db_error'] = "Ошибка сохранения чека %s для заказа %s";
+$_['text_check_ok'] = "Чек %s для заказа %s успешно зарегистрирован.";
+$_['text_check_created'] = "Для данного заказа был сформирован чек %s на сумму: %s %s";
+$_['text_order_not_found'] = "Заказ %s не найден";

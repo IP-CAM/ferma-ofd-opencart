@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>Modification OFD</name>
+    <version>1.0</version>
+    <author>Maksim Stepanov</author>
+    <link>http://www.mediaceh.ru</link>
+    <code>ofd</code>
+    <file path="admin/view/template/sale/order_info.twig">
+        <operation>
+            <search><![CDATA[<a href="{{ invoice }}" target="_blank" data-toggle="tooltip" title="{{ button_invoice_print }}" class="btn btn-info"><i class="fa fa-print"></i></a>]]></search>
+            <add position="replase"><![CDATA[
+            <a href="{{ income_invoice }}" data-toggle="tooltip" title="{{ button_income_invoice }}" class="btn btn-info">{{ button_income_invoice }}</a>
+            <a href="{{ return_invoice }}" data-toggle="tooltip" title="{{ button_return_invoice }}" class="btn btn-info">{{ button_return_invoice }}</a>
+            <a href="{{ invoice }}" target="_blank" data-toggle="tooltip" title="{{ button_invoice_print }}" class="btn btn-info"><i class="fa fa-print"></i></a>
+            ]]></add>
+        </operation>
+        <operation>
+            <search index="1"><![CDATA[<div class="container-fluid">]]></search>
+            <add position="replase"><![CDATA[
+             <div class="container-fluid">{% if error_warning_ofd %}
+              <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning_ofd }}
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+              </div>
+              {% endif %}
+              {% if success_ofd %}
+              <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success_ofd }}
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+              </div>
+              {% endif %}
+            ]]></add>
+        </operation>
+    </file>
+    <file path="admin/controller/sale/order.php">
+        <operation>
+            <search><![CDATA[$data['invoice'] = $this->url->link('sale/order/invoice', 'user_token=' . $this->session->data['user_token'] . '&order_id=' . (int)$this->request->get['order_id'], true);]]></search>
+            <add position="after"><![CDATA[
+            $data['income_invoice'] = $this->url->link('extension/module/ofd/OFDregCheckManually', 'user_token=' . $this->session->data['user_token'] . '&order_id=' . (int)$this->request->get['order_id']. '&type=Income', true);
+            $data['return_invoice'] = $this->url->link('extension/module/ofd/OFDregCheckManually', 'user_token=' . $this->session->data['user_token'] . '&order_id=' . (int)$this->request->get['order_id']. '&type=IncomeReturn', true);
+            ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[$this->response->setOutput($this->load->view('sale/order_info', $data));]]></search>
+            <add position="before"><![CDATA[
+            if (isset($this->session->data['success_ofd'])) {
+                $data['success_ofd'] = $this->session->data['success_ofd'];
+                unset($this->session->data['success_ofd']);
+            } else {
+                $data['success_ofd'] = '';
+            }
+            if (isset($this->session->data['error_warning_ofd'])) {
+                $data['error_warning_ofd'] = $this->session->data['error_warning_ofd'];
+                unset($this->session->data['error_warning_ofd']);
+            } else {
+                $data['error_warning_ofd'] = '';
+            }
+            ]]></add>
+        </operation>
+    </file>
+    <file path="admin/language/ru-ru/ru-ru.php">
+        <operation>
+            <search><![CDATA[$_['button_invoice_print']          = 'Показать счет';]]></search>
+            <add position="after"><![CDATA[
+            $_['button_income_invoice']          = 'Чек прихода (OFD.ru)';
+            $_['button_return_invoice']          = 'Чек возврата (OFD.ru)';
+            ]]></add>
+        </operation>
+    </file>
+    <file path="catalog/controller/api/order.php">
+        <operation>
+            <search><![CDATA[$this->model_checkout_order->addOrderHistory($order_id, $this->request->post['order_status_id'], $this->request->post['comment'], $this->request->post['notify'], $this->request->post['override']);]]></search>
+            <add position="after"><![CDATA[
+            if (isset($this->session->data['error_warning_ofd'])) {
+                $json['error'] = $this->session->data['error_warning_ofd'];
+                unset($this->session->data['error_warning_ofd']);
+            }
+            ]]></add>
+        </operation>
+    </file> 
+    <file path="admin/controller/common/column_left.php">
+        <operation>
+            <search><![CDATA[$complete_total = $this->model_report_statistics->getValue('order_complete');]]></search>
+            <add position="after"><![CDATA[
+            $ofd = array();
+            $ofd[] = array(
+                    'name'       => $this->language->get('text_ofd_settings'),
+                    'href'     => $this->url->link('extension/module/ofd', 'user_token=' . $this->session->data['user_token'], true),
+                    'children' => array()        
+                );
+            $ofd[] = array(
+                    'name'       => $this->language->get('text_ofd_checks'),
+                    'href'     => $this->url->link('extension/module/ofd/checksList', 'user_token=' . $this->session->data['user_token'], true),
+                    'children' => array()        
+                );    
+            $data['menus'][] = array(
+                'id'       => 'menu-ofd',
+                'icon'       => 'fa-file-text-o',
+                'name'       => $this->language->get('text_ofd'),
+                'href'     => '',
+                'children' => $ofd
+            );    
+            ]]></add>
+        </operation>
+    </file>    
+    <file path="admin/language/ru-ru/common/column_left.php">
+        <operation>
+            <search><![CDATA[$_['text_other_status']         = 'Остальные заказы';]]></search>
+            <add position="after"><![CDATA[
+            $_['text_ofd_settings'] = 'Настройки';
+            $_['text_ofd_checks'] = 'Реестр чеков';
+            $_['text_ofd'] = 'OFD.ru';
+            ]]></add>
+        </operation>
+    </file>    
+</modification>

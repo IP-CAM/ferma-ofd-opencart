@@ -1,0 +1,136 @@
+{{ header }}{{ column_left }}
+<div id="content">
+    <div class="page-header">
+        <div class="container-fluid">
+            <div class="pull-right">
+                <button type="submit" form="form-pp-std-uk" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
+                <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a></div>
+                <h1>{{ heading_title }}</h1>
+                <ul class="breadcrumb">
+                  {% for breadcrumb in breadcrumbs %}
+                  <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+                  {% endfor %}
+                </ul>
+        </div>
+    </div>
+    <div class="container-fluid">
+      {% if errors_warning %}
+         {% for error_warning in errors_warning %} 
+              <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+              </div>
+          {% endfor %}
+      {% endif %}
+      {% if success %}
+      <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+      </div>
+      {% endif %}    
+        <div  class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-pencil"></i> {{ text_edit }}</h3>
+            </div>
+            <div class="panel-body">
+                 <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-module" class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label" for="module_ofd_client_login">{{ entry_ofd_client_login }}</label>
+                                <div class="col-sm-8">
+                                    <input type="text" name="module_ofd_client_login" value="{{ ofd_client_login }}" placeholder="{{ entry_ofd_client_login }}" id="module_ofd_client_login" class="form-control"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                              <label class="col-sm-3 control-label" for="module_ofd_client_pass">{{ entry_ofd_client_pass }}</label>
+                              <div class="col-sm-8">
+                                <input type="text" name="module_ofd_client_pass" value="{{ ofd_client_pass }}" placeholder="{{ entry_ofd_client_pass }}" id="module_ofd_client_pass" class="form-control"/>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <label class="col-sm-3 control-label" for="module_ofd_inn">{{ entry_ofd_inn }}</label>
+                              <div class="col-sm-8">
+                                <input type="text" name="module_ofd_inn" value="{{ ofd_inn }}" placeholder="{{ entry_ofd_inn }}" id="module_ofd_inn" class="form-control"/>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <label class="col-sm-3 control-label" for="module_ofd_email">{{ entry_ofd_email }}</label>
+                              <div class="col-sm-8">
+                                <input type="text" name="module_ofd_email" value="{{ ofd_email }}" placeholder="{{ entry_ofd_email }}" id="module_ofd_email" class="form-control"/>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <label class="col-sm-3 control-label" for="module_ofd_nalog">{{ entry_ofd_nalog }}</label>
+                              <div class="col-sm-8">
+                                <select name="module_ofd_nalog" id="module_ofd_nalog" class="form-control">
+                                    <option value="" {% if ofd_nalog == '' %}selected{% endif %}>{{ entry_empty }}</option>
+                                    <option value="Common" {% if ofd_nalog == 'Common' %}selected{% endif %}>{{ entry_nalog_common }}</option>
+                                    <option value="SimpleIn" {% if ofd_nalog == 'SimpleIn' %}selected{% endif %}>{{ entry_nalog_simplein }}</option>
+                                    <option value="SimpleInOut" {% if ofd_nalog == 'SimpleInOut' %}selected{% endif %}>{{ entry_nalog_simpleinout }}</option>
+                                    <option value="Unified" {% if ofd_nalog == 'Unified' %}selected{% endif %}>{{ entry_nalog_unified }}</option>
+                                    <option value="UnifiedAgricultural" {% if ofd_nalog == 'UnifiedAgricultural' %}selected{% endif %}>{{ entry_nalog_unifiedagricultural }}</option>
+                                    <option value="Patent" {% if ofd_nalog == 'Patent' %}selected{% endif %}>{{ entry_nalog_patent }}</option>
+                                </select>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                            <label class="col-sm-3 control-label" for="module_ofd_collapse">{{ entry_ofd_collapse }}</label>
+                            <div class="col-sm-8">
+                              <select name="module_ofd_collapse" id="module_ofd_collapse" class="form-control">
+                                {% if ofd_collapse %}
+                                    <option value="1" selected="selected">{{ text_enabled }}</option>
+                                    <option value="0">{{ text_disabled }}</option>
+                                {% else %}
+                                    <option value="1">{{ text_enabled }}</option>
+                                    <option value="0" selected="selected">{{ text_disabled }}</option>
+                                {% endif %}
+                              </select>
+                            </div>
+                          </div>
+                            <div class="form-group">
+                              <label class="col-sm-3 control-label" for="module_ofd_collapse_name">{{ entry_ofd_collapse_name }}</label>
+                              <div class="col-sm-8">
+                                <input type="text" name="module_ofd_collapse_name" value="{{ ofd_collapse_name }}" placeholder="{{ entry_ofd_collapse_name }}" id="module_ofd_collapse_name" class="form-control"/>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <label class="control-label col-sm-3" for="module_ofd_order_status">{{ entry_ofd_order_status }}</label>
+                              <div class="col-sm-8">
+                                <select name="module_ofd_order_status" id="module_ofd_order_status" class="form-control">
+                                    <option value="">{{ entry_empty }}</option>
+                                   {% for order_status in order_statuses %}
+                                        <option value="{{ order_status.order_status_id }}" {% if order_status.order_status_id == ofd_order_status %}selected{% endif %}>{{ order_status.name }}</option>
+                                   {% endfor %}
+                                </select>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <label class="col-sm-3 control-label" for="module_ofd_nds">{{ entry_ofd_nds }}</label>
+                              <div class="col-sm-8">
+                                <select name="module_ofd_nds" id="module_ofd_nds" class="form-control">
+                                    <option value="" {% if ofd_nds == '' %}selected{% endif %}>{{ entry_empty }}</option>
+                                    <option value="Vat0" {% if ofd_nds == 'Vat0' %}selected{% endif %}>{{ entry_nds_vat0 }}</option>
+                                    <option value="Vat10" {% if ofd_nds == 'Vat10' %}selected{% endif %}>{{ entry_nds_vat10 }}</option>
+                                    <option value="Vat18" {% if ofd_nds == 'Vat18' %}selected{% endif %}>{{ entry_nds_vat18 }}</option>
+                                </select>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                            <label class="col-sm-3 control-label" for="module_ofd_status">{{ entry_status }}</label>
+                            <div class="col-sm-8">
+                              <select name="module_ofd_status" id="module_ofd_status" class="form-control">
+                                {% if ofd_status %}
+                                <option value="1" selected="selected">{{ text_enabled }}</option>
+                                <option value="0">{{ text_disabled }}</option>
+                                {% else %}
+                                <option value="1">{{ text_enabled }}</option>
+                                <option value="0" selected="selected">{{ text_disabled }}</option>
+                                {% endif %}
+                              </select>
+                            </div>
+                          </div>
+                            <input type="hidden" name="module_ofd_token" value="">
+                            <input type="hidden" name="module_ofd_token_exp_date" value="">
+                         </form>
+            </div>
+        </div>
+    </div>
+</div>
+{{ footer }} 
